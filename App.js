@@ -27,8 +27,9 @@ export default function App() {
 		setUserNumber(selectedNumber);
 		setGameOver(false);
 	}
-	function gameOverHandler() {
+	function gameOverHandler(numberOfRounds) {
 		setGameOver(true);
+		setRoundsNumber(numberOfRounds);
 	}
 	let screen = <StartGameScreen onPickNumber={pickedNumberHandler} />;
 

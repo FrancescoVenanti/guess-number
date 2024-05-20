@@ -6,6 +6,7 @@ import NumberContainer from "../Components/game/numberContainer";
 import Card from "../Components/ui/Card";
 import Instruction from "../Components/ui/Instruction";
 import { Ionicons } from "@expo/vector-icons";
+import GuessLogItem from "../Components/game/GuessLogItem";
 
 function generateRandomBetween(min, max, exclude) {
 	const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -26,7 +27,7 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 
 	useEffect(() => {
 		if (currentGuess == userChoice) {
-			gameOverHandler();
+			gameOverHandler(rounds.length);
 		}
 	}, [currentGuess, userChoice, gameOverHandler]);
 
@@ -53,6 +54,7 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 		setCurrentGuess(newRndNumber);
 		setRounds((currentRounds) => [newRndNumber, ...currentRounds]);
 	}
+	const guessRoundsListLength = rounds.length;
 	return (
 		<View style={styles.screen}>
 			<Title>Oppo's guess </Title>
@@ -72,16 +74,14 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 					</View>
 				</View>
 			</Card>
-			<View>
+			<View style={styles.listContainer}>
 				{/* {rounds.map((round) => (
 					<Text key={round}>{round}</Text>
 				))} */}
 				<FlatList
 					data={rounds}
 					renderItem={(itemData) => (
-						<View>
-							<Text>{itemData.item}</Text>
-						</View>
+						<GuessLogItem guess={itemData.item} index={guessRoundsListLength - itemData.index} />
 					)}
 					keyExtractor={(item) => item}
 				/>
@@ -105,5 +105,8 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		flex: 1,
+	},
+	listContainer: {
+		height: 400,
 	},
 });
