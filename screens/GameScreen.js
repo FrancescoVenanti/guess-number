@@ -84,6 +84,7 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 						<GuessLogItem guess={itemData.item} index={guessRoundsListLength - itemData.index} />
 					)}
 					keyExtractor={(item) => item}
+					showsVerticalScrollIndicator={false}
 				/>
 			</View>
 		</View>
