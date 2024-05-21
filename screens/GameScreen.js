@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Alert, FlatList } from "react-native";
+import { Text, View, StyleSheet, Alert, FlatList, Dimensions, useWindowDimensions } from "react-native";
 import PrimaryButton from "../Components/ui/PrimaryButton";
 import Title from "../Components/ui/Title";
 import { useState, useEffect } from "react";
@@ -24,6 +24,8 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 	const initlalGuess = generateRandomBetween(1, 100, userChoice);
 	const [currentGuess, setCurrentGuess] = useState(initlalGuess);
 	const [rounds, setRounds] = useState([initlalGuess]);
+
+	const { width, height } = useWindowDimensions();
 
 	useEffect(() => {
 		if (currentGuess == userChoice) {
@@ -55,9 +57,9 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 		setRounds((currentRounds) => [newRndNumber, ...currentRounds]);
 	}
 	const guessRoundsListLength = rounds.length;
-	return (
-		<View style={styles.screen}>
-			<Title>Oppo's guess </Title>
+
+	let content = (
+		<>
 			<NumberContainer>{currentGuess}</NumberContainer>
 			<Card>
 				<Instruction style={styles.InstructionText}>Is it higher or lower?</Instruction>
@@ -74,6 +76,34 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 					</View>
 				</View>
 			</Card>
+		</>
+	);
+
+	if (width > 500) {
+		content = (
+			<>
+				<Instruction style={styles.InstructionText}>Higher or Lower?</Instruction>
+				<View style={styles.buttonsContainerWide}>
+					<View style={styles.buttonContainer}>
+						<PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+							<Ionicons name="remove" size={24} color="yellow" />
+						</PrimaryButton>
+					</View>
+					<NumberContainer>{currentGuess}</NumberContainer>
+					<View style={styles.buttonContainer}>
+						<PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
+							<Ionicons name="add" size={24} color="yellow" />
+						</PrimaryButton>
+					</View>
+				</View>
+			</>
+		);
+	}
+
+	return (
+		<View style={styles.screen}>
+			<Title>Oppo's guess </Title>
+			{content}
 			<View style={styles.listContainer}>
 				{/* {rounds.map((round) => (
 					<Text key={round}>{round}</Text>
@@ -93,16 +123,23 @@ const GameScreen = ({ userChoice, gameOverHandler }) => {
 
 export default GameScreen;
 
+const deviceHeight = Dimensions.get("window").height;
+
 const styles = StyleSheet.create({
 	screen: {
 		padding: 24,
-		marginTop: 100,
+		marginTop: deviceHeight < 500 ? 10 : 100,
 	},
 	InstructionText: {
 		marginBottom: 16,
+		textAlign: "center",
 	},
 	buttonsContainer: {
 		flexDirection: "row",
+	},
+	buttonsContainerWide: {
+		flexDirection: "row",
+		alignItems: "center",
 	},
 	buttonContainer: {
 		flex: 1,
